@@ -3,7 +3,8 @@ class Item:
     Класс для представления товара в магазине.
     """
     pay_rate = 1.0  # Скидка
-    all = []        # Список всего
+    all = []        # Список всего в ячейке памяти
+    all_name = []   # Список всего наименованиями
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -16,6 +17,9 @@ class Item:
         self.name = name
         self.price = price
         self.quantity = quantity
+
+        Item.all.append(self)
+        Item.all_name.append(name)
 
     def calculate_total_price(self) -> float:
         """
