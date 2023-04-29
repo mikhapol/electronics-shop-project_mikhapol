@@ -1,10 +1,13 @@
+import csv
+
+
 class Item:
     """
     Класс для представления товара в магазине.
     """
     pay_rate = 1.0  # Скидка
-    all = []        # Список всего в ячейке памяти
-    all_name = []   # Список всего наименованиями
+    all = []  # Список всего в ячейке памяти
+    all_name = []  # Список всего наименованиями
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """
@@ -14,12 +17,28 @@ class Item:
         :param price: Цена за единицу товара.
         :param quantity: Количество товара в магазине.
         """
-        self.name = name
+        self.__name = name
         self.price = price
         self.quantity = quantity
 
         Item.all.append(self)
         Item.all_name.append(name)
+
+    @property
+    def name(self):
+        """
+        Геттер приватного параметра name
+        :return:
+        """
+        return self.__name
+
+    @name.setter
+    def name(self, name: str):
+        """
+        Сеттер приватного параметра который проверяет, что длина наименования товара не больше 10 символов
+        """
+        if len(name) <= 10:
+            self.__name = name
 
     def calculate_total_price(self) -> float:
         """
@@ -34,3 +53,14 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price = self.price * self.pay_rate
+
+    @staticmethod
+    def string_to_number(number):
+        return int(float(number))
+
+    @classmethod
+    def instantiate_from_csv(cls):
+        with open("src/items.csv", "r", encoding='windows-1251') as csv_file:
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                cls(row["name"], row["price"], row["quantity"])
