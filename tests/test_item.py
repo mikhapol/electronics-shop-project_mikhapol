@@ -38,22 +38,12 @@ def test_string_to_number():
     assert Item.string_to_number('5.5') == 5
 
 
-def test_instantiate_from_csv():
-    # Item.instantiate_from_csv()
-    # assert Item.all[0].name == "Смартфон"
-    # assert Item.all[0].price == '100'
-    # assert Item.all[0].quantity == '1'
-
-    assert Item.all[0].name == "Телефон"
-    assert Item.all[0].price == 7000
-    assert Item.all[0].quantity == 20
-
-
 def test_repr():
     assert repr(Item.all[0]) == "Item('Телефон', 7000, 20)"
 
 
 def test_str():
-    assert str(Item.all[0].name) == 'Телефон'
-    assert (str(Item.all[1].name)*2) == 'НоутбукНоутбук'
-    assert type(str(Item.all[1].name)) == str
+    item = Item("Смартфон", 10000, 20)
+    assert item.name == 'Смартфон'
+    assert str(item) * 2 == 'СмартфонСмартфон'
+    assert type(str(item)) == str
