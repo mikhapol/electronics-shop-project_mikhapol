@@ -1,9 +1,12 @@
 import os  # Подключение модуля OS - адаптация пути к файлам в ОС.
 import csv
 
-BASE_PATH = os.path.abspath("../src")  # Применение абсолютного пути.
+
+BASE_PATH = os.path.abspath("src")  # Применение абсолютного пути.
 FILE_ITEMS = os.path.join(BASE_PATH, "items.csv")
 
+# print(BASE_PATH)
+# print(FILE_ITEMS)
 
 class Item:
     """
@@ -23,6 +26,8 @@ class Item:
         self.__name = name
         self.price = price
         self.quantity = quantity
+        super().__init__()
+
 
         Item.all.append(self)
         Item.all_name.append(name)
@@ -61,6 +66,11 @@ class Item:
         Применяет установленную скидку для конкретного товара.
         """
         self.price = self.price * self.pay_rate
+
+    def __add__(self, other):
+        if not isinstance(other, self.__class__):
+            raise ValueError('Складывать можно только объекты Item и дочерние от них.')
+        return self.quantity + other.quantity
 
     @staticmethod
     def string_to_number(number: float) -> int:
