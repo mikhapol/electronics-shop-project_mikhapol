@@ -1,6 +1,7 @@
 import pytest
 
 from src.item import Item
+from src.phone import Phone
 
 """Здесь надо написать тесты с использованием pytest для модуля item."""
 
@@ -39,7 +40,11 @@ def test_string_to_number():
 
 
 def test_repr():
-    assert repr(Item.all[0]) == "Item('Телефон', 7000, 20)"
+    item1 = Item("Смартфон", 10000, 20)
+    phone1 = Phone("iPhone 14", 120_000, 5, 2)
+
+    assert repr(item1) == "Item('Смартфон', 10000, 20)"
+    assert repr(phone1) == "Phone('iPhone 14', 120000, 5, 2)"
 
 
 def test_str():
@@ -47,3 +52,11 @@ def test_str():
     assert item.name == 'Смартфон'
     assert str(item) * 2 == 'СмартфонСмартфон'
     assert type(str(item)) == str
+
+
+def test_instantiate_from_csv():
+    Item.all.clear()
+    Item.instantiate_from_csv()
+    assert Item.all[0].name == 'Смартфон'
+    assert Item.all[0].price == '100'
+    assert Item.all[0].quantity == '1'
