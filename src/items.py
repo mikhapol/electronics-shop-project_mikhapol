@@ -1,12 +1,20 @@
 import os  # Подключение модуля OS - адаптация пути к файлам в ОС.
 import csv
 
-
 BASE_PATH = os.path.abspath("src")  # Применение абсолютного пути.
-FILE_ITEMS = os.path.join(BASE_PATH, "items.csv")
+# FILE_CSV = "items.csv"
+# FILE_CSV = "item.csv"
+FILE_CSV = "items_err.csv"
+FILE_ITEMS = os.path.join(BASE_PATH, FILE_CSV)
+
 
 # print(BASE_PATH)
 # print(FILE_ITEMS)
+
+class InstantiateCSVError(Exception):
+    def __str__(self):
+        print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
+
 
 class Item:
     """
@@ -27,7 +35,6 @@ class Item:
         self.price = price
         self.quantity = quantity
         super().__init__()
-
 
         Item.all.append(self)
         Item.all_name.append(name)
@@ -76,9 +83,41 @@ class Item:
     def string_to_number(number: float) -> int:
         return int(float(number))
 
+    ########### Part_1
+    # @classmethod
+    # def instantiate_from_csv(cls) -> None:
+    #     try:
+    #         with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
+    #             reader = csv.DictReader(csv_file)
+    #             for row in reader:
+    #                 cls(row["name"], row["price"], row["quantity"])
+    #     except FileNotFoundError:
+    #         print(f"Отсутствует файл {FILE_ITEMS}")
+
+    ########### Part_2
+    # @classmethod
+    # def instantiate_from_csv(cls) -> None:
+    #     if FILE_ITEMS is False:
+    #         raise FileNotFoundError("Отсутствует файл item.csv")
+    #     else:
+    #         with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
+    #             reader = csv.DictReader(csv_file)
+    #             for row in reader:
+    #                 cls(row["name"], row["price"], row["quantity"])
+
+    ########### Part_3
     @classmethod
     def instantiate_from_csv(cls) -> None:
-        with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
-            reader = csv.DictReader(csv_file)
-            for row in reader:
-                cls(row["name"], row["price"], row["quantity"])
+        try:
+            with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
+                reader = csv.DictReader(csv_file)
+                if 'name' not in reader.fieldnames or \
+                        'price' not in reader.fieldnames or \
+                        'quantity' not in reader.fieldnames:
+                    raise InstantiateCSVError
+                for row in reader:
+                    cls(row['name'], row['price'], row['quantity'])
+
+        except FileNotFoundError:
+            print(f'FileNotFoundError: ОТСУТСТВУЕТ файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
+

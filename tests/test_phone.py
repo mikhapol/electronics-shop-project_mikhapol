@@ -1,6 +1,6 @@
 import pytest
 
-from src.item import Item
+from src.items import Item
 from src.phone import Phone
 
 

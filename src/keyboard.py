@@ -1,7 +1,7 @@
-from src.item import Item
+from src.items import Item
 
 
-class Language:
+class Language:  # класс миксин
 
     def __init__(self):
         self.__language = 'EN'
