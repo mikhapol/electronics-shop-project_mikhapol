@@ -1,17 +1,20 @@
 import os  # Подключение модуля OS - адаптация пути к файлам в ОС.
-import csv
+import csv  # Подключение модуля CSV
 
 BASE_PATH = os.path.abspath("src")  # Применение абсолютного пути.
-# FILE_CSV = "items.csv"
-# FILE_CSV = "item.csv"
-FILE_CSV = "items_err.csv"
-FILE_ITEMS = os.path.join(BASE_PATH, FILE_CSV)
 
+FILE_CSV = "items.csv"        # нормальный файл
+# FILE_CSV = "item.csv"  # несуществующий файл
+# FILE_CSV = "items_err.csv"  # повреждённый файл
 
-# print(BASE_PATH)
-# print(FILE_ITEMS)
+FILE_ITEMS = os.path.join(BASE_PATH, FILE_CSV)  # Полноценный путь к файлу
+
 
 class InstantiateCSVError(Exception):
+    """
+    Общий класс исключения.
+    """
+
     def __str__(self):
         print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
 
@@ -56,7 +59,8 @@ class Item:
     @name.setter
     def name(self, name: str) -> None:
         """
-        Сеттер приватного параметра который проверяет, что длина наименования товара не больше 10 символов
+        Сеттер приватного параметра который проверяет,
+        что длина наименования товара не больше 10 символов
         """
         if len(name) <= 10:
             self.__name = name
@@ -74,40 +78,33 @@ class Item:
         """
         self.price = self.price * self.pay_rate
 
-    def __add__(self, other):
+    def __add__(self, other: int) -> int:
+        """
+        Складывать можно только объекты Item и дочерние от них.
+        :param other:
+        :return: int
+        """
         if not isinstance(other, self.__class__):
             raise ValueError('Складывать можно только объекты Item и дочерние от них.')
         return self.quantity + other.quantity
 
     @staticmethod
     def string_to_number(number: float) -> int:
+        """
+        Возвращает целое число ели будет десятичное
+        :param number:
+        :return: int
+        """
         return int(float(number))
 
-    ########### Part_1
-    # @classmethod
-    # def instantiate_from_csv(cls) -> None:
-    #     try:
-    #         with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
-    #             reader = csv.DictReader(csv_file)
-    #             for row in reader:
-    #                 cls(row["name"], row["price"], row["quantity"])
-    #     except FileNotFoundError:
-    #         print(f"Отсутствует файл {FILE_ITEMS}")
-
-    ########### Part_2
-    # @classmethod
-    # def instantiate_from_csv(cls) -> None:
-    #     if FILE_ITEMS is False:
-    #         raise FileNotFoundError("Отсутствует файл item.csv")
-    #     else:
-    #         with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
-    #             reader = csv.DictReader(csv_file)
-    #             for row in reader:
-    #                 cls(row["name"], row["price"], row["quantity"])
-
-    ########### Part_3
     @classmethod
     def instantiate_from_csv(cls) -> None:
+        """
+        Класс-метод, инициализирующий экземпляры класса Item данными
+        из файла src/****.csv
+        Проверяет на наличие файла и ошибки.
+        :return: None
+        """
         try:
             with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
                 reader = csv.DictReader(csv_file)
@@ -120,4 +117,3 @@ class Item:
 
         except FileNotFoundError:
             print(f'FileNotFoundError: ОТСУТСТВУЕТ файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
-
