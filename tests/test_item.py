@@ -1,4 +1,4 @@
-import pytest
+import pytest, sys
 
 from src.items import Item, InstantiateCSVError, FILE_ITEMS
 from src.phone import Phone
@@ -55,10 +55,17 @@ def test_str():
 
 
 def test_instantiate_from_csv():
-    Item.all.clear()
+    # Item.all.clear()
     item = Item("Смартфон", 10000, 20)
     Item.instantiate_from_csv()
     assert item.name == 'Смартфон'
     assert item.price == 10000
     assert item.quantity == 20
+
+    # with pytest.raises(InstantiateCSVError):
+    #     Item.instantiate_from_csv()
+
+    # Item.instantiate_from_csv()
+    # captured = capsys.readouterr()
+    # assert captured.out == "Файл item.csv поврежден\n"
 

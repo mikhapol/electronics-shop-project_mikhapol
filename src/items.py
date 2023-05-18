@@ -3,9 +3,9 @@ import csv  # Подключение модуля CSV
 
 BASE_PATH = os.path.abspath("src")  # Применение абсолютного пути.
 
-FILE_CSV = "items.csv"        # нормальный файл
+# FILE_CSV = "items.csv"  # нормальный файл
 # FILE_CSV = "item.csv"  # несуществующий файл
-# FILE_CSV = "items_err.csv"  # повреждённый файл
+FILE_CSV = "items_err.csv"  # повреждённый файл
 
 FILE_ITEMS = os.path.join(BASE_PATH, FILE_CSV)  # Полноценный путь к файлу
 
@@ -98,7 +98,7 @@ class Item:
         return int(float(number))
 
     @classmethod
-    def instantiate_from_csv(cls) -> None:
+    def instantiate_from_csv(cls):
         """
         Класс-метод, инициализирующий экземпляры класса Item данными
         из файла src/****.csv
@@ -108,12 +108,15 @@ class Item:
         try:
             with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
                 reader = csv.DictReader(csv_file)
-                if 'name' not in reader.fieldnames or \
-                        'price' not in reader.fieldnames or \
-                        'quantity' not in reader.fieldnames:
+                Item.all.clear()
+                correct_colons = ['name', 'price', 'quantity']
+                if reader.fieldnames == correct_colons:
+                    for item in reader:
+                        cls(item['name'], item['price'], item['quantity'])
+                else:
                     raise InstantiateCSVError
-                for row in reader:
-                    cls(row['name'], row['price'], row['quantity'])
+        except InstantiateCSVError:
+            print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
 
         except FileNotFoundError:
             print(f'FileNotFoundError: ОТСУТСТВУЕТ файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
