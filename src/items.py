@@ -3,9 +3,9 @@ import csv  # Подключение модуля CSV
 
 BASE_PATH = os.path.abspath("src")  # Применение абсолютного пути.
 
-# FILE_CSV = "items.csv"  # нормальный файл
+FILE_CSV = "items.csv"  # нормальный файл
 # FILE_CSV = "item.csv"  # несуществующий файл
-FILE_CSV = "items_err.csv"  # повреждённый файл
+# FILE_CSV = "items_err.csv"  # повреждённый файл
 
 FILE_ITEMS = os.path.join(BASE_PATH, FILE_CSV)  # Полноценный путь к файлу
 
@@ -16,7 +16,7 @@ class InstantiateCSVError(Exception):
     """
 
     def __str__(self):
-        print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
+        print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}".')
 
 
 class Item:
@@ -91,7 +91,7 @@ class Item:
     @staticmethod
     def string_to_number(number: float) -> int:
         """
-        Возвращает целое число ели будет десятичное
+        Возвращает целое число если будет десятичное
         :param number:
         :return: int
         """
@@ -116,7 +116,7 @@ class Item:
                 else:
                     raise InstantiateCSVError
         except InstantiateCSVError:
-            print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
+            print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}".')
 
         except FileNotFoundError:
-            print(f'FileNotFoundError: ОТСУТСТВУЕТ файл "{FILE_CSV}" \nПо адресу *{FILE_ITEMS}*.')
+            print(f'FileNotFoundError: ОТСУТСТВУЕТ файл "{FILE_CSV}".')

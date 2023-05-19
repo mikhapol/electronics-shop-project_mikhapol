@@ -54,18 +54,22 @@ def test_str():
     assert type(str(item)) == str
 
 
-def test_instantiate_from_csv():
-    # Item.all.clear()
+def test_instantiate_from_csv(capsys):
     item = Item("Смартфон", 10000, 20)
     Item.instantiate_from_csv()
     assert item.name == 'Смартфон'
     assert item.price == 10000
     assert item.quantity == 20
 
+        # Test на повреждённый файл
+    # captured = capsys.readouterr()
+    # assert captured.out == 'InstantiateCSVError: ПОВРЕЖДЁН файл "items_err.csv".\n'
+
+        # Test на несуществующий файл
+    # captured = capsys.readouterr()
+    # assert captured.out == 'FileNotFoundError: ОТСУТСТВУЕТ файл "item.csv".\n'
+
+        # Не работает!!! Так как вывод ошибки через except, а не через raise.
     # with pytest.raises(InstantiateCSVError):
     #     Item.instantiate_from_csv()
-
-    # Item.instantiate_from_csv()
-    # captured = capsys.readouterr()
-    # assert captured.out == "Файл item.csv поврежден\n"
 
