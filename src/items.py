@@ -15,9 +15,6 @@ class InstantiateCSVError(Exception):
     Общий класс исключения.
     """
 
-    def __str__(self):
-        print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}".')
-
 
 class Item:
     """
@@ -98,7 +95,7 @@ class Item:
         return int(float(number))
 
     @classmethod
-    def instantiate_from_csv(cls):
+    def instantiate_from_csv(cls, file=FILE_CSV):
         """
         Класс-метод, инициализирующий экземпляры класса Item данными
         из файла src/****.csv
@@ -106,7 +103,7 @@ class Item:
         :return: None
         """
         try:
-            with open(FILE_ITEMS, "r", encoding='windows-1251') as csv_file:
+            with open(os.path.join(BASE_PATH, file), "r", encoding='windows-1251') as csv_file:
                 reader = csv.DictReader(csv_file)
                 Item.all.clear()
                 correct_colons = ['name', 'price', 'quantity']
@@ -116,7 +113,7 @@ class Item:
                 else:
                     raise InstantiateCSVError
         except InstantiateCSVError:
-            print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{FILE_CSV}".')
+            print(f'InstantiateCSVError: ПОВРЕЖДЁН файл "{file}".')
 
         except FileNotFoundError:
-            print(f'FileNotFoundError: ОТСУТСТВУЕТ файл "{FILE_CSV}".')
+            print(f'FileNotFoundError: ОТСУТСТВУЕТ файл "{file}".')

@@ -1,6 +1,6 @@
 import pytest, sys
 
-from src.items import Item, InstantiateCSVError, FILE_ITEMS
+from src.items import Item, FILE_CSV
 from src.phone import Phone
 
 """Здесь надо написать тесты с использованием pytest для модуля item."""
@@ -56,20 +56,30 @@ def test_str():
 
 def test_instantiate_from_csv(capsys):
     item = Item("Смартфон", 10000, 20)
-    Item.instantiate_from_csv()
     assert item.name == 'Смартфон'
     assert item.price == 10000
     assert item.quantity == 20
 
-        # Test на повреждённый файл
-    # captured = capsys.readouterr()
-    # assert captured.out == 'InstantiateCSVError: ПОВРЕЖДЁН файл "items_err.csv".\n'
+    # Test на вызов без имени
+    Item.instantiate_from_csv()
+    captured = capsys.readouterr()
+    assert captured.out == ""
 
-        # Test на несуществующий файл
-    # captured = capsys.readouterr()
-    # assert captured.out == 'FileNotFoundError: ОТСУТСТВУЕТ файл "item.csv".\n'
+    # Test на передачу имени в метод
+    Item.instantiate_from_csv("items.csv")
+    captured = capsys.readouterr()
+    assert captured.out == ""
 
-        # Не работает!!! Так как вывод ошибки через except, а не через raise.
+    # Test на несуществующий файл
+    Item.instantiate_from_csv("item.csv")
+    captured = capsys.readouterr()
+    assert captured.out == 'FileNotFoundError: ОТСУТСТВУЕТ файл "item.csv".\n'
+
+    # Test на повреждённый файл
+    Item.instantiate_from_csv("items_err.csv")
+    captured = capsys.readouterr()
+    assert captured.out == 'InstantiateCSVError: ПОВРЕЖДЁН файл "items_err.csv".\n'
+
+    # Не работает!!! Так как вывод ошибки через except, а не через raise.
     # with pytest.raises(InstantiateCSVError):
     #     Item.instantiate_from_csv()
-
